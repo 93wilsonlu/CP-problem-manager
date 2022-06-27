@@ -22,7 +22,11 @@ const fetchCodeforces = async () => {
         if (response.status === "OK") {
             let submissions = response.result;
             for (let submission of submissions) {
-                let url = `https://codeforces.com/contest/${submission.problem.contestId}/problem/${submission.problem.index}`;
+                let url = `https://codeforces.com/${
+                    submission.problem.contestId > 100000 ? "gym" : "contest"
+                }/${submission.problem.contestId}/problem/${
+                    submission.problem.index
+                }`;
                 let index = problem_list.findIndex(
                     (problem) => problem.url === url
                 );
