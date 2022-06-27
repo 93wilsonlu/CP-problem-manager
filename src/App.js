@@ -1,25 +1,93 @@
-import logo from './logo.svg';
-import './App.css';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/*global chrome*/
+import "./App.css";
+import React from "react";
+import { List } from "./components/List";
+import { SettingPage } from "./components/SettingPage";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            problem_list: [],
+            is_refreshing: false,
+            show_setting: false,
+        };
+        this.deleteProblem = this.deleteProblem.bind(this);
+        this.handleRefresh = this.handleRefresh.bind(this);
+        this.toggleSetting = this.toggleSetting.bind(this);
+        chrome.storage.sync.get(["problem_list"], (obj) => {
+            this.setState({ problem_list: obj.problem_list });
+        });
+    }
+    deleteProblem(id) {
+        let problem_list = this.state.problem_list.filter(
+            (problem) => problem.id !== id
+        );
+        this.setState({
+            problem_list: problem_list,
+        });
+        chrome.storage.sync.set({ problem_list: problem_list }, () => {
+            console.log("Deleted problems");
+        });
+    }
+    async handleRefresh() {
+        this.setState({ is_refreshing: true });
+        let response = await chrome.runtime.sendMessage({ message: "REFRESH" });
+        console.log(response);
+        if (response === "OK") {
+            let problem_list = (
+                await chrome.storage.sync.get(["problem_list"])
+            ).problem_list;
+            this.setState({
+                problem_list: problem_list,
+            });
+        }
+        this.setState({ is_refreshing: false });
+    }
+    toggleSetting() {
+        this.setState({
+            show_setting: !this.state.show_setting,
+        });
+    }
+    render() {
+        let refresh_icon = this.state.is_refreshing ? (
+            <i className="bi bi-check text-success"></i>
+        ) : (
+            <a href="#" onClick={this.handleRefresh}>
+                <i className="bi bi-arrow-clockwise"></i>
+            </a>
+        );
+        return (
+            <div className="container my-2">
+                <div className="d-flex justify-content-between align-items-center mb-1">
+                    <h2>Problems manager</h2>
+                    <a href="#" onClick={this.toggleSetting}>
+                        <i class="bi bi-gear-fill"></i>
+                    </a>
+                </div>
+                <List
+                    problem_list={this.state.problem_list}
+                    handleDelete={this.deleteProblem}
+                />
+                <div className="d-flex justify-content-evenly align-items-center mb-1">
+                    {refresh_icon}
+                    <a
+                        href="https://github.com/93wilsonlu/cp-problem-manager"
+                        class="text-decoration"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        Github
+                    </a>
+                </div>
+                <SettingPage
+                    show={this.state.show_setting}
+                    onClick={this.toggleSetting}
+                />
+            </div>
+        );
+    }
 }
 
 export default App;
