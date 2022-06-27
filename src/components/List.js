@@ -12,7 +12,7 @@ class List extends React.Component {
                     <ListItem
                         key={problem.id}
                         problem={problem}
-                        handleDelete={this.props.handleDelete}
+                        handleUpdateStatus={this.props.handleUpdateStatus}
                     />
                 ))}
             </ul>

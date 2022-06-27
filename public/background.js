@@ -22,17 +22,22 @@ const fetchCodeforces = async () => {
         if (response.status === "OK") {
             let submissions = response.result;
             for (let submission of submissions) {
-                let url = `https://codeforces.com/${
-                    submission.problem.contestId > 100000 ? "gym" : "contest"
-                }/${submission.problem.contestId}/problem/${
-                    submission.problem.index
-                }`;
+                let url;
+                if (submission.problem.contestId) {
+                    if (submission.problem.contestId > 100000) {
+                        url = `https://codeforces.com/gym/${submission.problem.contestId}/problem/${submission.problem.index}`;
+                    } else {
+                        url = `https://codeforces.com/contest/${submission.problem.contestId}/problem/${submission.problem.index}`;
+                    }
+                } else {
+                    url = `https://codeforces.com/problemsets/acmsguru/problem/99999/${submission.problem.index}`;
+                }
                 let index = problem_list.findIndex(
                     (problem) => problem.url === url
                 );
                 if (index === -1) {
                     problem_list.push({
-                        id: +new Date(),
+                        id: submission.id,
                         name: submission.problem.name,
                         url: url,
                         status: "Practicing",
