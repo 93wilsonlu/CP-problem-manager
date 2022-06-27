@@ -24,60 +24,54 @@ class SettingPanel extends React.Component {
     }
     handleClose() {
         chrome.storage.sync.set(this.state, () => {});
-        this.props.onClose();
     }
     render() {
         return (
             <div
-                className={
-                    this.props.show
-                        ? "offcanvas offcanvas-end show"
-                        : "offcanvas offcanvas-end"
-                }
+                className="offcanvas offcanvas-end"
                 tabindex="-1"
-                id="offcanvasExample"
-                aria-labelledby="offcanvasExampleLabel"
-                style={{ visibility: "visible" }}
+                id="offcanvasRight"
+                aria-labelledby="offcanvasRightLabel"
             >
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">
+                    <h5 class="offcanvas-title" id="offcanvasRightLabel">
                         Setting
                     </h5>
                     <button
                         type="button"
                         class="btn-close text-reset"
+                        data-bs-dismiss="offcanvas"
+                        aria-label="Close"
                         onClick={this.handleClose}
                     ></button>
                 </div>
                 <div class="offcanvas-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="codeforces-username" class="form-label">
-                                Codeforces username
-                            </label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="codeforces-username"
-                                name="codeforces_username"
-                                onChange={this.handleChange}
-                                value={this.state.codeforces_username}
-                            />
-                        </div>
-                        <div class="mb-3">
-                            <label for="refresh-count" class="form-label">
-                                Refresh count
-                            </label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="refresh-count"
-                                name="refresh_count"
-                                onChange={this.handleChange}
-                                value={this.state.refresh_count}
-                            />
-                        </div>
-                    </form>
+                    <div class="mb-3">
+                        <label for="codeforces-username" class="form-label">
+                            Codeforces username
+                        </label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="codeforces-username"
+                            name="codeforces_username"
+                            onChange={this.handleChange}
+                            value={this.state.codeforces_username}
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="refresh-count" class="form-label">
+                            Refresh count
+                        </label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="refresh-count"
+                            name="refresh_count"
+                            onChange={this.handleChange}
+                            value={this.state.refresh_count}
+                        />
+                    </div>
                 </div>
             </div>
         );

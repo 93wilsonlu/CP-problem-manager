@@ -15,7 +15,6 @@ class App extends React.Component {
         };
         this.deleteProblem = this.deleteProblem.bind(this);
         this.handleRefresh = this.handleRefresh.bind(this);
-        this.toggleSettingPanel = this.toggleSettingPanel.bind(this);
         chrome.storage.sync.get(["problem_list"], (obj) => {
             this.setState(obj);
         });
@@ -44,11 +43,6 @@ class App extends React.Component {
         }
         this.setState({ is_refreshing: false });
     }
-    toggleSettingPanel() {
-        this.setState({
-            show_setting: !this.state.show_setting,
-        });
-    }
     render() {
         let refresh_icon = this.state.is_refreshing ? (
             <i className="bi bi-check text-success"></i>
@@ -61,7 +55,12 @@ class App extends React.Component {
             <div className="container my-2">
                 <div className="d-flex justify-content-between align-items-center mb-1">
                     <h2>Problems manager</h2>
-                    <a href="#" onClick={this.toggleSettingPanel}>
+                    <a
+                        data-bs-toggle="offcanvas"
+                        href="#offcanvasRight"
+                        role="button"
+                        aria-controls="offcanvasRight"
+                    >
                         <i class="bi bi-gear-fill"></i>
                     </a>
                 </div>
@@ -73,17 +72,13 @@ class App extends React.Component {
                     {refresh_icon}
                     <a
                         href="https://github.com/93wilsonlu/cp-problem-manager"
-                        class="text-decoration"
                         target="_blank"
                         rel="noreferrer"
                     >
                         Github
                     </a>
                 </div>
-                <SettingPanel
-                    show={this.state.show_setting}
-                    onClose={this.toggleSettingPanel}
-                />
+                <SettingPanel />
             </div>
         );
     }

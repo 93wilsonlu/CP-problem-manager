@@ -4,7 +4,10 @@ import { ListItem } from "./ListItem";
 class List extends React.Component {
     render() {
         return (
-            <ul id="filter-list" className="list-group list-group-flush mb-2">
+            <ul
+                className="list-group list-group-flush mb-2 overflow-auto"
+                style={{ height: "250px" }}
+            >
                 {this.props.problem_list.map((problem) => (
                     <ListItem
                         key={problem.id}
