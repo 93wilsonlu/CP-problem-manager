@@ -3,7 +3,7 @@
 import "./App.css";
 import React from "react";
 import { List } from "./components/List";
-import { SettingPage } from "./components/SettingPage";
+import { SettingPanel } from "./components/SettingPanel";
 
 class App extends React.Component {
     constructor() {
@@ -15,9 +15,9 @@ class App extends React.Component {
         };
         this.deleteProblem = this.deleteProblem.bind(this);
         this.handleRefresh = this.handleRefresh.bind(this);
-        this.toggleSetting = this.toggleSetting.bind(this);
+        this.toggleSettingPanel = this.toggleSettingPanel.bind(this);
         chrome.storage.sync.get(["problem_list"], (obj) => {
-            this.setState({ problem_list: obj.problem_list });
+            this.setState(obj);
         });
     }
     deleteProblem(id) {
@@ -34,18 +34,17 @@ class App extends React.Component {
     async handleRefresh() {
         this.setState({ is_refreshing: true });
         let response = await chrome.runtime.sendMessage({ message: "REFRESH" });
-        console.log(response);
         if (response === "OK") {
-            let problem_list = (
-                await chrome.storage.sync.get(["problem_list"])
-            ).problem_list;
+            let { problem_list } = await chrome.storage.sync.get([
+                "problem_list",
+            ]);
             this.setState({
                 problem_list: problem_list,
             });
         }
         this.setState({ is_refreshing: false });
     }
-    toggleSetting() {
+    toggleSettingPanel() {
         this.setState({
             show_setting: !this.state.show_setting,
         });
@@ -62,7 +61,7 @@ class App extends React.Component {
             <div className="container my-2">
                 <div className="d-flex justify-content-between align-items-center mb-1">
                     <h2>Problems manager</h2>
-                    <a href="#" onClick={this.toggleSetting}>
+                    <a href="#" onClick={this.toggleSettingPanel}>
                         <i class="bi bi-gear-fill"></i>
                     </a>
                 </div>
@@ -81,9 +80,9 @@ class App extends React.Component {
                         Github
                     </a>
                 </div>
-                <SettingPage
+                <SettingPanel
                     show={this.state.show_setting}
-                    onClick={this.toggleSetting}
+                    onClose={this.toggleSettingPanel}
                 />
             </div>
         );

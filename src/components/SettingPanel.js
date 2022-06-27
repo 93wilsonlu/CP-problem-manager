@@ -1,6 +1,31 @@
+/*global chrome*/
 import React from "react";
 
-class SettingPage extends React.Component {
+class SettingPanel extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            codeforces_username: "",
+            refresh_count: 10,
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        chrome.storage.sync.get(
+            ["codeforces_username", "refresh_count"],
+            (obj) => {
+                this.setState(obj);
+            }
+        );
+    }
+    handleChange(e) {
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
+    }
+    handleClose() {
+        chrome.storage.sync.set(this.state, () => {});
+        this.props.onClose();
+    }
     render() {
         return (
             <div
@@ -21,19 +46,22 @@ class SettingPage extends React.Component {
                     <button
                         type="button"
                         class="btn-close text-reset"
-                        onClick={this.props.onClick}
+                        onClick={this.handleClose}
                     ></button>
                 </div>
                 <div class="offcanvas-body">
                     <form>
                         <div class="mb-3">
-                            <label for="cf-username" class="form-label">
+                            <label for="codeforces-username" class="form-label">
                                 Codeforces username
                             </label>
                             <input
                                 type="text"
                                 class="form-control"
-                                id="cf-username"
+                                id="codeforces-username"
+                                name="codeforces_username"
+                                onChange={this.handleChange}
+                                value={this.state.codeforces_username}
                             />
                         </div>
                         <div class="mb-3">
@@ -44,6 +72,9 @@ class SettingPage extends React.Component {
                                 type="text"
                                 class="form-control"
                                 id="refresh-count"
+                                name="refresh_count"
+                                onChange={this.handleChange}
+                                value={this.state.refresh_count}
                             />
                         </div>
                     </form>
@@ -53,4 +84,4 @@ class SettingPage extends React.Component {
     }
 }
 
-export { SettingPage };
+export { SettingPanel };
