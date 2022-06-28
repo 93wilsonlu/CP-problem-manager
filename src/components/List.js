@@ -6,7 +6,7 @@ class List extends React.Component {
         return (
             <ul
                 className="list-group list-group-flush mb-2 overflow-auto"
-                style={{ height: "250px" }}
+                style={{ "height": "250px" }}
             >
                 {this.props.problem_list.map((problem) => (
                     <ListItem

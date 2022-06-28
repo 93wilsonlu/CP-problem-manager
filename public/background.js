@@ -5,6 +5,13 @@ chrome.runtime.onInstalled.addListener(() => {
         codeforces_username: "",
         refresh_count: 10,
         problem_list: [],
+        filter: {
+            search_text: "",
+            Solved: true,
+            Practicing: true,
+            Unsolved: true,
+            Reviewing: true,
+        },
     });
 });
 

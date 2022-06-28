@@ -5,6 +5,7 @@ import React from "react";
 import { List } from "./components/List";
 import { SettingPanel } from "./components/SettingPanel";
 import { CheckDeleteWindow } from "./components/CheckDeleteWindow";
+import { Filter } from "./components/Filter";
 
 class App extends React.Component {
     constructor() {
@@ -18,6 +19,7 @@ class App extends React.Component {
         this.handleWantDelete = this.handleWantDelete.bind(this);
         this.handleUpdateStatus = this.handleUpdateStatus.bind(this);
         this.handleRefresh = this.handleRefresh.bind(this);
+        this.handleFilter = this.handleFilter.bind(this);
         chrome.storage.local.get(["problem_list"], (obj) => {
             this.setState(obj);
         });
@@ -41,7 +43,6 @@ class App extends React.Component {
     handleUpdateStatus(id, status) {
         let problem_list = this.state.problem_list;
         let index = problem_list.findIndex((problem) => problem.id === id);
-        console.log(problem_list[index].name, status);
         problem_list[index].status = status;
         this.setState({
             problem_list: problem_list,
@@ -62,6 +63,17 @@ class App extends React.Component {
             });
         }
         this.setState({ is_refreshing: false });
+    }
+    async handleFilter(filter) {
+        let { problem_list } = await chrome.storage.local.get(["problem_list"]);
+        problem_list = problem_list.filter(
+            (problem) =>
+                problem.name.includes(filter.search_text) &&
+                filter[problem.status]
+        );
+        this.setState({
+            problem_list: problem_list,
+        });
     }
     render() {
         let refresh_icon = this.state.is_refreshing ? (
@@ -84,6 +96,7 @@ class App extends React.Component {
                         <i class="bi bi-gear-fill"></i>
                     </a>
                 </div>
+                <Filter onSubmit={this.handleFilter} />
                 <List
                     problem_list={this.state.problem_list}
                     handleUpdateStatus={this.handleUpdateStatus}

@@ -1,10 +1,3 @@
-const Status = Object.freeze({
-    Solved: Symbol("Solved"),
-    Practicing: Symbol("Practicing"),
-    Unsolved: Symbol("Unsolved"),
-    Reviewing: Symbol("Reviewing"),
-});
-
 const Style = {
     Solved: { backgroundColor: "#198754", borderColor: "#198754" },
     Practicing: { backgroundColor: "#ffc107", borderColor: "#ffc107" },
@@ -21,4 +14,4 @@ class Problem {
     }
 }
 
-export { Problem, Status, Style };
+export { Problem, Style };
