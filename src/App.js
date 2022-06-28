@@ -4,6 +4,7 @@ import "./App.css";
 import React from "react";
 import { List } from "./components/List";
 import { SettingPanel } from "./components/SettingPanel";
+import { CheckDeleteWindow } from "./components/CheckDeleteWindow";
 
 class App extends React.Component {
     constructor() {
@@ -11,17 +12,19 @@ class App extends React.Component {
         this.state = {
             problem_list: [],
             is_refreshing: false,
+            want_delete_id: 0,
         };
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleWantDelete = this.handleWantDelete.bind(this);
         this.handleUpdateStatus = this.handleUpdateStatus.bind(this);
         this.handleRefresh = this.handleRefresh.bind(this);
         chrome.storage.local.get(["problem_list"], (obj) => {
             this.setState(obj);
         });
     }
-    handleDelete(id) {
+    handleDelete() {
         let problem_list = this.state.problem_list.filter(
-            (problem) => problem.id !== id
+            (problem) => problem.id !== this.state.want_delete_id
         );
         this.setState({
             problem_list: problem_list,
@@ -30,20 +33,22 @@ class App extends React.Component {
             console.log("Deleted problems");
         });
     }
+    handleWantDelete(id) {
+        this.setState({
+            want_delete_id: id,
+        });
+    }
     handleUpdateStatus(id, status) {
-        if (status === "Delete") {
-        } else {
-            let problem_list = this.state.problem_list;
-            let index = problem_list.findIndex((problem) => problem.id === id);
-            console.log(problem_list[index].name, status)
-            problem_list[index].status = status;
-            this.setState({
-                problem_list: problem_list,
-            });
-            chrome.storage.local.set({ problem_list: problem_list }, () => {
-                console.log("Updated problem Status");
-            });
-        }
+        let problem_list = this.state.problem_list;
+        let index = problem_list.findIndex((problem) => problem.id === id);
+        console.log(problem_list[index].name, status);
+        problem_list[index].status = status;
+        this.setState({
+            problem_list: problem_list,
+        });
+        chrome.storage.local.set({ problem_list: problem_list }, () => {
+            console.log("Updated problem Status");
+        });
     }
     async handleRefresh() {
         this.setState({ is_refreshing: true });
@@ -82,6 +87,7 @@ class App extends React.Component {
                 <List
                     problem_list={this.state.problem_list}
                     handleUpdateStatus={this.handleUpdateStatus}
+                    handleDelete={this.handleWantDelete}
                 />
                 <div className="d-flex justify-content-evenly align-items-center mb-1">
                     {refresh_icon}
@@ -94,6 +100,7 @@ class App extends React.Component {
                     </a>
                 </div>
                 <SettingPanel />
+                <CheckDeleteWindow handleDelete={this.handleDelete} />
             </div>
         );
     }

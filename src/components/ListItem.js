@@ -84,11 +84,10 @@ class ListItem extends React.Component {
                             <a
                                 class="dropdown-item"
                                 href="#"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal"
                                 onClick={() =>
-                                    this.props.handleUpdateStatus(
-                                        this.props.problem.id,
-                                        "Delete"
-                                    )
+                                    this.props.handleDelete(this.props.problem.id)
                                 }
                             >
                                 <i class="bi bi-trash text-danger"></i> Delete
