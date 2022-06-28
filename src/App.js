@@ -15,7 +15,7 @@ class App extends React.Component {
         this.handleDelete = this.handleDelete.bind(this);
         this.handleUpdateStatus = this.handleUpdateStatus.bind(this);
         this.handleRefresh = this.handleRefresh.bind(this);
-        chrome.storage.sync.get(["problem_list"], (obj) => {
+        chrome.storage.local.get(["problem_list"], (obj) => {
             this.setState(obj);
         });
     }
@@ -26,7 +26,7 @@ class App extends React.Component {
         this.setState({
             problem_list: problem_list,
         });
-        chrome.storage.sync.set({ problem_list: problem_list }, () => {
+        chrome.storage.local.set({ problem_list: problem_list }, () => {
             console.log("Deleted problems");
         });
     }
@@ -40,7 +40,7 @@ class App extends React.Component {
             this.setState({
                 problem_list: problem_list,
             });
-            chrome.storage.sync.set({ problem_list: problem_list }, () => {
+            chrome.storage.local.set({ problem_list: problem_list }, () => {
                 console.log("Updated problem Status");
             });
         }
@@ -49,7 +49,7 @@ class App extends React.Component {
         this.setState({ is_refreshing: true });
         let response = await chrome.runtime.sendMessage({ message: "REFRESH" });
         if (response === "OK") {
-            let { problem_list } = await chrome.storage.sync.get([
+            let { problem_list } = await chrome.storage.local.get([
                 "problem_list",
             ]);
             this.setState({

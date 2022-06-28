@@ -10,7 +10,7 @@ class SettingPanel extends React.Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleClose = this.handleClose.bind(this);
-        chrome.storage.sync.get(
+        chrome.storage.local.get(
             ["codeforces_username", "refresh_count"],
             (obj) => {
                 this.setState(obj);
@@ -23,7 +23,7 @@ class SettingPanel extends React.Component {
         });
     }
     handleClose() {
-        chrome.storage.sync.set(this.state, () => {});
+        chrome.storage.local.set(this.state, () => {});
     }
     render() {
         return (

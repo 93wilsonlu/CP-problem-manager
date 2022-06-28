@@ -6,10 +6,10 @@ const Status = Object.freeze({
 });
 
 const Style = {
-    Solved: {backgroundColor:"#198754", borderColor:"#198754"},
-    Practicing: {backgroundColor:"#ffc107", borderColor:"#ffc107"},
-    Unsolved: {backgroundColor:"#f8f9fa", borderColor:"#212529"},
-    Reviewing: {backgroundColor:"#212529", borderColor:"#212529"},
+    Solved: { backgroundColor: "#198754", borderColor: "#198754" },
+    Practicing: { backgroundColor: "#ffc107", borderColor: "#ffc107" },
+    Unsolved: { backgroundColor: "#f8f9fa", borderColor: "#212529" },
+    Reviewing: { backgroundColor: "#212529", borderColor: "#212529" },
 };
 
 class Problem {

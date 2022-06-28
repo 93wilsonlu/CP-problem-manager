@@ -1,7 +1,7 @@
 /*global chrome*/
 chrome.runtime.onInstalled.addListener(() => {
     console.log("Chrome extension successfully installed!");
-    chrome.storage.sync.set({
+    chrome.storage.local.set({
         codeforces_username: "",
         refresh_count: 10,
         problem_list: [],
@@ -10,7 +10,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 const fetchCodeforces = async () => {
     let { codeforces_username, refresh_count, problem_list } =
-        await chrome.storage.sync.get([
+        await chrome.storage.local.get([
             "codeforces_username",
             "refresh_count",
             "problem_list",
@@ -48,7 +48,7 @@ const fetchCodeforces = async () => {
                     problem_list[index].status = "Solved";
                 }
             }
-            await chrome.storage.sync.set({ problem_list: problem_list });
+            await chrome.storage.local.set({ problem_list: problem_list });
             console.log("Sucessfully fetched!");
         } else {
             console.log("Fetch failed!");
